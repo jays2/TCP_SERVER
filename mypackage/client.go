@@ -31,43 +31,43 @@ func (c *Client) ReadInput() {
 
 		//Sends input to server through chan
 		switch cmd {
-		case "/nick":
+		case "/nick": //Creates a nickname
 			c.Commands <- Command{
 				Id:     CMD_NICK,
 				Client: c,
 				Args:   args,
 			}
-		case "/join":
+		case "/join": //Joins a client to a channel
 			c.Commands <- Command{
 				Id:     CMD_JOIN,
 				Client: c,
 				Args:   args,
 			}
-		case "/direct":
+		case "/direct": //Sends a direct message to channel members
 			c.Commands <- Command{
 				Id:     CMD_DIRECT,
 				Client: c,
 				Args:   args,
 			}
-		case "/copy":
+		case "/copy": //Copies a file to channel members
 			c.Commands <- Command{
 				Id:     CMD_COPY,
 				Client: c,
 				Args:   args,
 			}
-		case "/show":
+		case "/show": //Displays client channels
 			c.Commands <- Command{
 				Id:     CMD_SHOW,
 				Client: c,
 				Args:   args,
 			}
-		case "/kill":
+		case "/kill": //Unsubscribes a client from a channel
 			c.Commands <- Command{
 				Id:     CMD_KILL,
 				Client: c,
 				Args:   args,
 			}
-		case "/destroy":
+		case "/destroy": //Destroys client
 			c.Commands <- Command{
 				Id:     CMD_DESTROY,
 				Client: c,

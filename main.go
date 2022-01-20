@@ -1,15 +1,31 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net"
+	"net/http"
 	"os"
 
 	pk "github.com/jays2/general/mypackage"
+	"github.com/rs/cors"
 )
 
+var s *pk.Server
+
+type VueResponse struct {
+	Channel string `json:"channel"`
+	Members string `json:"members"`
+	Payload int64  `json:"payload"`
+}
+
+var vueVar []VueResponse
+
 func main() {
-	s := pk.NewServer()
+	s = pk.NewServer()
+
+	go handleRequests()
+
 	go s.Run()
 
 	//Deletes users directory if existent
@@ -39,5 +55,26 @@ func main() {
 		}
 
 		go s.NewClient(conn)
+
 	}
+}
+
+func handleRequests() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", returnServer)
+	handler := cors.Default().Handler(mux)
+	http.ListenAndServe(":3000", handler)
+}
+
+func returnServer(w http.ResponseWriter, r *http.Request) {
+	vueVar = nil
+	var membersContainer string
+	for _, v := range s.Channels {
+		membersContainer = ""
+		for _, m := range v.Members {
+			membersContainer += m.Nick + " "
+		}
+		vueVar = append(vueVar, VueResponse{Channel: v.Name, Members: membersContainer, Payload: v.Payload})
+	}
+	json.NewEncoder(w).Encode(vueVar)
 }

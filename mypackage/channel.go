@@ -11,6 +11,7 @@ import (
 type Channel struct {
 	Name    string
 	Members map[net.Addr]*Client
+	Payload int64
 }
 
 //Broadcast: Handles broadcast messages to subscribers on channel
@@ -34,11 +35,12 @@ func (r *Channel) Broadcast(sender *Client, msg string) {
 func (r *Channel) BroadcastFiles(sender *Client, msg string) {
 	var n bool
 	openFileRoute := Current_files + sender.Nick + "/" + msg
-	for addr, r := range r.Members {
+	for addr, reciever := range r.Members {
 		if sender.Conn.RemoteAddr() != addr {
 			n = true
-			createFileRoute := Current_files + r.Nick + "/" + msg
-			CopyFiles(openFileRoute, createFileRoute, r, sender)
+			createFileRoute := Current_files + reciever.Nick + "/" + msg
+			CopyFiles(openFileRoute, createFileRoute, reciever, sender, r)
+
 		}
 	}
 
@@ -48,7 +50,7 @@ func (r *Channel) BroadcastFiles(sender *Client, msg string) {
 }
 
 //CopyFiles: Open, creates and copies bytes on destination channel
-func CopyFiles(origin string, destination string, reciever *Client, sender *Client) {
+func CopyFiles(origin string, destination string, reciever *Client, sender *Client, r *Channel) {
 	sourceFile, err := os.Open(origin)
 	if err != nil {
 		sender.Msg("Cannot open file")
@@ -70,6 +72,7 @@ func CopyFiles(origin string, destination string, reciever *Client, sender *Clie
 	}
 
 	log.Printf("Bytes %d copied", bytesCopied)
+	r.Payload += bytesCopied
 	reciever.Msg("A file has been received from " + sender.Nick)
 	sender.Msg("You sent a file to " + reciever.Nick)
 }

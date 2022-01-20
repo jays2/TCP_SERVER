@@ -124,6 +124,14 @@ func (s *Server) Join(c *Client, chanName string) {
 		return
 	}
 
+	//Verifies if client already suscribed in
+	for _, v := range c.Channels {
+		if v.Name == chanName {
+			c.Msg("You already belong to this channel")
+			return
+		}
+	}
+
 	//Verifies if channel exists in server, if not we create it
 	r, ok := s.Channels[chanName]
 	if !ok {
@@ -140,6 +148,7 @@ func (s *Server) Join(c *Client, chanName string) {
 	c.Channels = append(c.Channels, r)
 
 	c.Msg(fmt.Sprintf("Welcome to %s", chanName))
+
 }
 
 //DirectMessage: Sends a chat message to a channel
@@ -187,10 +196,15 @@ func (s *Server) Unsub(c *Client, chanName string) {
 			break
 		}
 	}
+
 }
 
 //Destroy: Client gets erased for good
 func (s *Server) Destroy(c *Client) {
+
+	c.Msg("See you soon!")
+	c.Conn.Close()
+
 	//Deletes client from every channel in server
 	for _, v := range s.Channels {
 		delete(v.Members, c.Conn.RemoteAddr())
@@ -209,5 +223,5 @@ func (s *Server) Destroy(c *Client) {
 	os.RemoveAll(Current_dir + "/" + c.Nick)
 
 	//Cleans instance
-	c = &Client{}
+	//c = &Client{}
 }

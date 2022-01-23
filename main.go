@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"sort"
 	"strings"
 
 	pk "github.com/jays2/general/mypackage"
@@ -79,7 +80,9 @@ func returnServer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if vueVar != nil {
+		sort.Slice(vueVar, func(i, j int) bool {
+			return vueVar[i].Channel < vueVar[j].Channel
+		})
 		json.NewEncoder(w).Encode(vueVar)
 	}
-
 }

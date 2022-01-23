@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
 
 	pk "github.com/jays2/general/mypackage"
 	"github.com/rs/cors"
@@ -53,7 +54,6 @@ func main() {
 			log.Printf("Communication has failed: %s", err.Error())
 			continue
 		}
-
 		go s.NewClient(conn)
 
 	}
@@ -72,9 +72,14 @@ func returnServer(w http.ResponseWriter, r *http.Request) {
 	for _, v := range s.Channels {
 		membersContainer = ""
 		for _, m := range v.Members {
-			membersContainer += m.Nick + " "
+			membersContainer += m.Nick + ", "
 		}
+		membersContainer := strings.TrimRight(membersContainer, ", ")
 		vueVar = append(vueVar, VueResponse{Channel: v.Name, Members: membersContainer, Payload: v.Payload})
 	}
-	json.NewEncoder(w).Encode(vueVar)
+
+	if vueVar != nil {
+		json.NewEncoder(w).Encode(vueVar)
+	}
+
 }

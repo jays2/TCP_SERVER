@@ -70,12 +70,20 @@ func handleRequests() {
 func returnServer(w http.ResponseWriter, r *http.Request) {
 	vueVar = nil
 	var membersContainer string
+	var membersSorted []string
 	for _, v := range s.Channels {
+		membersSorted = nil
 		membersContainer = ""
+		//Fill slice with members, sort it, and assign it to members container
 		for _, m := range v.Members {
-			membersContainer += m.Nick + ", "
+			membersSorted = append(membersSorted, m.Nick)
+		}
+		sort.Strings(membersSorted)
+		for _, m := range membersSorted {
+			membersContainer += m + ", "
 		}
 		membersContainer := strings.TrimRight(membersContainer, ", ")
+		//vueVar: Slice sent via API to Vue.js
 		vueVar = append(vueVar, VueResponse{Channel: v.Name, Members: membersContainer, Payload: v.Payload})
 	}
 

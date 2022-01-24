@@ -27,7 +27,7 @@ func (c *Client) ReadInput() {
 
 		msg = strings.Trim(msg, "\r\n")
 		args := strings.Split(msg, " ")
-		cmd := strings.TrimSpace(args[0])
+		cmd := strings.TrimSpace(args[0]) //Root command
 
 		//Sends input to server through chan
 		switch cmd {

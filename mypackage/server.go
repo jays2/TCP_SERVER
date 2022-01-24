@@ -40,17 +40,17 @@ func (s *Server) Run() {
 	for cmd := range s.Commands {
 		switch cmd.Id {
 		case CMD_NICK:
-			s.Nick(cmd.Client, cmd.Args[1])
+			s.Nick(cmd.Client, cmd.Args)
 		case CMD_JOIN:
-			s.Join(cmd.Client, cmd.Args[1])
+			s.Join(cmd.Client, cmd.Args)
 		case CMD_DIRECT:
 			s.DirectMessage(cmd.Client, cmd.Args)
 		case CMD_COPY:
 			s.CopyJunk(cmd.Client, cmd.Args)
 		case CMD_SHOW:
-			s.Show(cmd.Client, cmd.Args)
+			s.Show(cmd.Client)
 		case CMD_KILL:
-			s.Unsub(cmd.Client, cmd.Args[1])
+			s.Unsub(cmd.Client, cmd.Args)
 		case CMD_DESTROY:
 			s.Destroy(cmd.Client)
 		}
@@ -58,17 +58,19 @@ func (s *Server) Run() {
 }
 
 //Nick: Defines a new client nickname
-func (s *Server) Nick(c *Client, nick string) {
+func (s *Server) Nick(c *Client, args []string) {
+	nick := args[1]
+
+	if nick == "" {
+		c.Msg("Please insert a valid nickname")
+		return
+	}
+
 	for _, v := range s.Nicks {
 		if v == nick {
 			c.Msg("This user already exists, cannot create directory")
 			return
 		}
-	}
-
-	if nick == "" {
-		c.Msg("Please insert a valid nickname")
-		return
 	}
 
 	//Deletes from server old nickname, in case it already exists
@@ -118,13 +120,15 @@ func (s *Server) Nick(c *Client, nick string) {
 }
 
 //Join: Joins a channel to transfer data
-func (s *Server) Join(c *Client, chanName string) {
+func (s *Server) Join(c *Client, args []string) {
+	chanName := args[1]
+
 	if chanName == "" {
-		c.Msg("Channel must have a name")
+		c.Msg("Channel must have a valid name, try again!")
 		return
 	}
 
-	//Verifies if client already suscribed in
+	//Verifies if client is already subscribed
 	for _, v := range c.Channels {
 		if v.Name == chanName {
 			c.Msg("You already belong to this channel")
@@ -166,14 +170,16 @@ func (s *Server) CopyJunk(c *Client, args []string) {
 }
 
 //Show: Shows client channels
-func (s *Server) Show(c *Client, args []string) {
+func (s *Server) Show(c *Client) {
 	for _, v := range c.Channels {
 		c.Msg(v.Name)
 	}
 }
 
 //Unsub: Unsubscribes from a channel
-func (s *Server) Unsub(c *Client, chanName string) {
+func (s *Server) Unsub(c *Client, args []string) {
+	chanName := args[1]
+
 	if chanName == "" {
 		c.Msg("Channel must have a name")
 		return
@@ -201,7 +207,6 @@ func (s *Server) Unsub(c *Client, chanName string) {
 
 //Destroy: Client gets erased for good
 func (s *Server) Destroy(c *Client) {
-
 	c.Msg("See you soon!")
 	c.Conn.Close()
 
@@ -221,7 +226,4 @@ func (s *Server) Destroy(c *Client) {
 
 	//Removes client directory
 	os.RemoveAll(Current_dir + "/" + c.Nick)
-
-	//Cleans instance
-	//c = &Client{}
 }

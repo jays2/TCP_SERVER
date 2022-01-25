@@ -38,7 +38,7 @@ Now you're connected as a client and able to use these commands.
 - /kill [channel]: Unsubscribes a client from a channel. 
 - /destroy: Kills client connection.
 
-For every new client a default nickname is created as "Unknown", it has no channels nor directory inside ./Users folder. For this reason, no files can be copied to this user. Only if we assign a nickname its directory is created and full functionality is activated. Needless to say, the files transferred are copied to every user folder on ./Users/[user]. It's worth noting that for every nickname assigned, a .txt file it's created inside the client directory, you know... to avoid transferring files to test and such.
+For every new client a default nickname is created as "Unknown", it has no channels nor directory inside ./Users folder. For this reason, no files can be copied to this user. Only if we assign a nickname its directory is created and full functionality is activated. Needless to say, the files transferred are copied to every user folder on ./Users/[user]. It's worth noting that for every nickname assigned, a [user].txt file it's created inside the client directory, you know... to avoid transferring files from your device to test and such.
 
 Let's take a look for a few examples but not limited to:
 
@@ -83,11 +83,11 @@ enidsierra@DESKTOP-3BV3HK1:/mnt/c/Users/enids$ telnet localhost 8888
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
-/nick Bob
-> Welcome Bob
+/nick Alice
+> Welcome Alice
 /join G1
 > Welcome to G1
-> A file has been received from Alice
+> A file has been transfered to Bob
 ```
 Bob joins the same channel and recieves file from Alice:
 ```

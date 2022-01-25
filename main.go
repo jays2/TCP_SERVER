@@ -15,12 +15,14 @@ import (
 
 var s *pk.Server
 
+//API struct
 type VueResponse struct {
 	Channel string `json:"channel"`
 	Members string `json:"members"`
 	Payload int64  `json:"payload"`
 }
 
+//API variable
 var vueVar []VueResponse
 
 func main() {

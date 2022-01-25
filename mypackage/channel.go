@@ -14,7 +14,7 @@ type Channel struct {
 	Payload int64
 }
 
-//Broadcast: Handles broadcast messages to subscribers on channel
+//Broadcast: Handles broadcast messages to subscribers in channel
 func (r *Channel) Broadcast(sender *Client, msg string) {
 	var n = 0
 	for addr, m := range r.Members {
@@ -31,7 +31,7 @@ func (r *Channel) Broadcast(sender *Client, msg string) {
 
 }
 
-//BroadcastFiles: Handles file transfer from client directory to subscribers on channel
+//BroadcastFiles: Handles file transfer from client directory to subscribers in channel
 func (r *Channel) BroadcastFiles(sender *Client, msg string) {
 	var n bool
 	openFileRoute := Current_files + sender.Nick + "/" + msg

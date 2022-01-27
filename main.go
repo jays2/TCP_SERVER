@@ -32,7 +32,7 @@ func main() {
 
 	go s.Run()
 
-	//Deletes users directory if existent
+	//Deletes Users directory if existent
 	os.RemoveAll(pk.Current_dir)
 
 	//Creates users directory for storage
@@ -81,6 +81,7 @@ func returnServer(w http.ResponseWriter, r *http.Request) {
 			membersSorted = append(membersSorted, m.Nick)
 		}
 		sort.Strings(membersSorted)
+		//Slice does not have separators, we add them
 		for _, m := range membersSorted {
 			membersContainer += m + ", "
 		}

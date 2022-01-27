@@ -66,7 +66,7 @@
       <div class="w3-light-grey">
         <div class="w3-container">
           <h3>Name: {{c.channel}}</h3>
-          <p class="w3-opacity">Payload: </p>
+          <p class="w3-opacity">Payload bytes: </p>
           <p>{{c.payload}}</p>
         </div>
       </div>

@@ -157,7 +157,7 @@ func (s *Server) Join(c *Client, args []string) {
 
 //DirectMessage: Sends a chat message to a channel
 func (s *Server) DirectMessage(c *Client, args []string) {
-	msg := strings.Join(args[2:], " ")
+	msg := strings.Join(args[2:], " ") //Concatenate and separate by ""
 	medium := args[1]
 	c.BroadcastDirect(c, medium, c.Nick+": "+msg)
 }
